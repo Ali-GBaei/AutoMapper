@@ -1,0 +1,68 @@
+@model List<AutoMapperLearning.Models.DTOs.EmployeeDTO>
+
+@{
+    ViewData["Title"] = ViewBag.Title;
+}
+
+<div class="container mt-5">
+    <h2>@ViewBag.Title</h2>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">@ViewBag.Title</li>
+        </ol>
+    </nav>
+
+    <div class="alert alert-info">
+        <strong>ℹ️ Description:</strong> @ViewBag.Description
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Employee List (@Model.Count items)</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var employee in Model)
+                    {
+                        <tr>
+                            <td>@employee.Id</td>
+                            <td>@employee.Name</td>
+                            <td>@employee.Email</td>
+                            <td><span class="badge bg-info">@employee.Department</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-secondary text-white">
+            <h5>💻 Code Used</h5>
+        </div>
+        <div class="card-body">
+            <pre class="bg-light p-3"><code>// Create a list of employees
+var employees = new List&lt;Employee&gt; { ... };
+
+// Map entire collection in one call
+var employeeDTOs = _mapper.Map&lt;List&lt;EmployeeDTO&gt;&gt;(employees);
+
+// AutoMapper handles each item automatically!</code></pre>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Examples</a>
+    </div>
+</div>

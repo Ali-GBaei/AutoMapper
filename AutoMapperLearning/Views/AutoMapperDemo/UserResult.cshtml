@@ -1,0 +1,73 @@
+@model AutoMapperLearning.Models.Domain.User
+
+@{
+    ViewData["Title"] = ViewBag.Title;
+}
+
+<div class="container mt-5">
+    <h2>@ViewBag.Title</h2>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">@ViewBag.Title</li>
+        </ol>
+    </nav>
+
+    <div class="alert alert-info">
+        <strong>ℹ️ Description:</strong> @ViewBag.Description
+    </div>
+
+    @if (ViewBag.Note != null)
+    {
+        <div class="alert alert-warning">
+            <strong>📝 Note:</strong> @ViewBag.Note
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h4>User Object Result</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th width="200">Property</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td><strong>Id</strong></td>
+                    <td>@Model.Id</td>
+                </tr>
+                <tr>
+                    <td><strong>First Name</strong></td>
+                    <td>@Model.FirstName</td>
+                </tr>
+                <tr>
+                    <td><strong>Last Name</strong></td>
+                    <td>@Model.LastName</td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong></td>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <td><strong>Date of Birth</strong></td>
+                    <td>@Model.DateOfBirth.ToString("MMMM dd, yyyy")</td>
+                </tr>
+                <tr>
+                    <td><strong>Created At</strong></td>
+                    <td>@Model.CreatedAt.ToString("MMMM dd, yyyy HH:mm:ss")</td>
+                </tr>
+                <tr>
+                    <td><strong>Is Active</strong></td>
+                    <td>@(Model.IsActive ? "Yes" : "No")</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Examples</a>
+    </div>
+</div>

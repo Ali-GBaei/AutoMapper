@@ -1,0 +1,108 @@
+@model AutoMapperLearning.Models.DTOs.UserDTO
+
+@{
+    ViewData["Title"] = ViewBag.Title;
+}
+
+<div class="container mt-5">
+    <h2>@ViewBag.Title</h2>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">@ViewBag.Title</li>
+        </ol>
+    </nav>
+
+    <div class="alert alert-info">
+        <strong>ℹ️ Description:</strong> @ViewBag.Description
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Mapping Result</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th width="200">Property</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td><strong>Id</strong></td>
+                    <td>@Model.Id</td>
+                </tr>
+                <tr>
+                    <td><strong>First Name</strong></td>
+                    <td>@Model.FirstName</td>
+                </tr>
+                <tr>
+                    <td><strong>Last Name</strong></td>
+                    <td>@Model.LastName</td>
+                </tr>
+                <tr>
+                    <td><strong>Full Name</strong> <span class="badge bg-success">Computed</span></td>
+                    <td>@Model.FullName</td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong></td>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <td><strong>Date of Birth</strong> <span class="badge bg-info">Formatted</span></td>
+                    <td>@Model.DateOfBirthFormatted</td>
+                </tr>
+                <tr>
+                    <td><strong>Age</strong> <span class="badge bg-warning text-dark">Calculated</span></td>
+                    <td>@Model.Age years</td>
+                </tr>
+                <tr>
+                    <td><strong>Total Orders</strong></td>
+                    <td>@Model.TotalOrders</td>
+                </tr>
+                <tr>
+                    <td><strong>Status</strong> <span class="badge bg-danger">Resolver</span></td>
+                    <td>@Model.Status</td>
+                </tr>
+                @if (Model.Address != null)
+                {
+                    <tr>
+                        <td><strong>Address</strong></td>
+                        <td>
+                            @Model.Address.Street<br/>
+                            @Model.Address.City, @Model.Address.State @Model.Address.ZipCode<br/>
+                            <strong>Full Address:</strong> @Model.Address.FullAddress
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-secondary text-white">
+            <h5>💻 Code Used</h5>
+        </div>
+        <div class="card-body">
+            <pre class="bg-light p-3"><code>// Create source object
+var user = new User
+{
+    Id = 1,
+    FirstName = "John",
+    LastName = "Doe",
+    Email = "john.doe@example.com",
+    DateOfBirth = new DateTime(1990, 1, 1),
+    // ... other properties
+};
+
+// Map to DTO using AutoMapper
+var userDTO = _mapper.Map&lt;UserDTO&gt;(user);
+
+// That's it! AutoMapper handles all the mapping logic</code></pre>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Examples</a>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+@{
+    ViewData["Title"] = ViewBag.Title;
+}
+
+<div class="container mt-5">
+    <h2>@ViewBag.Title</h2>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">@ViewBag.Title</li>
+        </ol>
+    </nav>
+
+    <div class="alert alert-info">
+        <strong>ℹ️ Description:</strong> @ViewBag.Description
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h4>Conditional Mapping Results</h4>
+        </div>
+        <div class="card-body">
+            <h5>Active User Result</h5>
+            <table class="table table-bordered mb-4">
+                <tr>
+                    <th width="200">Property</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td><strong>Full Name</strong></td>
+                    <td>@ViewBag.ActiveUser.FullName</td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong> <span class="badge bg-success">Mapped</span></td>
+                    <td>@ViewBag.ActiveUser.Email</td>
+                </tr>
+            </table>
+
+            <h5>Inactive User Result</h5>
+            <table class="table table-bordered">
+                <tr>
+                    <th width="200">Property</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td><strong>Full Name</strong></td>
+                    <td>@ViewBag.InactiveUser.FullName</td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong> <span class="badge bg-danger">NOT Mapped</span></td>
+                    <td>@(string.IsNullOrEmpty(ViewBag.InactiveUser.Email) ? "(empty - not mapped)" : ViewBag.InactiveUser.Email)</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-secondary text-white">
+            <h5>🔀 Conditional Mapping Explained</h5>
+        </div>
+        <div class="card-body">
+            <pre class="bg-light p-3"><code>CreateMap&lt;User, UserBasicDTO&gt;()
+    .ForMember(dest => dest.FullName,
+        opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+    .ForMember(dest => dest.Email,
+        opt => opt.Condition(src => src.IsActive)); // Only map if IsActive is true
+
+// Result:
+// Active User: Email is mapped
+// Inactive User: Email is NOT mapped (remains empty/null)</code></pre>
+            <p class="mt-3"><strong>Use Case:</strong> Hide sensitive information based on conditions, map only relevant data based on state, implement conditional business rules.</p>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Examples</a>
+    </div>
+</div>

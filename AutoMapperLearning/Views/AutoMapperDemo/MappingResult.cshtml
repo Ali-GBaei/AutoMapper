@@ -1,0 +1,75 @@
+@model dynamic
+
+@{
+    ViewData["Title"] = ViewBag.Title;
+}
+
+<div class="container mt-5">
+    <h2>@ViewBag.Title</h2>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">@ViewBag.Title</li>
+        </ol>
+    </nav>
+
+    <div class="alert alert-info">
+        <strong>ℹ️ Description:</strong> @ViewBag.Description
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Mapping Result</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th width="200">Property</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td><strong>Id</strong></td>
+                    <td>@Model.Id</td>
+                </tr>
+                <tr>
+                    <td><strong>Name</strong></td>
+                    <td>@Model.Name</td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong></td>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <td><strong>Department</strong></td>
+                    <td>@Model.Department</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-secondary text-white">
+            <h5>💻 Code Used</h5>
+        </div>
+        <div class="card-body">
+            <pre class="bg-light p-3"><code>// Source object
+var employee = new Employee
+{
+    Id = 1,
+    Name = "John Doe",
+    Email = "john.doe@example.com",
+    Department = "IT"
+};
+
+// Map to DTO
+var employeeDTO = _mapper.Map&lt;EmployeeDTO&gt;(employee);
+
+// AutoMapper automatically maps properties with the same name!</code></pre>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Examples</a>
+    </div>
+</div>

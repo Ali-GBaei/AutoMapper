@@ -1,0 +1,82 @@
+@{
+    ViewData["Title"] = ViewBag.Title;
+}
+
+<div class="container mt-5">
+    <h2>@ViewBag.Title</h2>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">@ViewBag.Title</li>
+        </ol>
+    </nav>
+
+    <div class="alert alert-info">
+        <strong>ℹ️ Description:</strong> @ViewBag.Description
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Code Example</h4>
+        </div>
+        <div class="card-body">
+            <pre class="bg-light p-3"><code>@Html.Raw(ViewBag.Code)</code></pre>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-success text-white">
+            <h5>⚡ Why ProjectTo is Important</h5>
+        </div>
+        <div class="card-body">
+            <h6>Without ProjectTo (Inefficient)</h6>
+            <pre class="bg-light p-3 mb-3"><code>// Retrieves ALL columns from User table
+var users = await dbContext.Users.ToListAsync();
+
+// Maps in memory (after loading all data)
+var userDTOs = _mapper.Map&lt;List&lt;UserDTO&gt;&gt;(users);</code></pre>
+
+            <h6>With ProjectTo (Efficient)</h6>
+            <pre class="bg-light p-3"><code>// ProjectTo translates mapping to SQL
+// Only retrieves columns needed for UserDTO
+var userDTOs = await dbContext.Users
+    .ProjectTo&lt;UserDTO&gt;(_mapper.ConfigurationProvider)
+    .ToListAsync();</code></pre>
+
+            <h6 class="mt-3">Performance Comparison</h6>
+            <table class="table table-bordered mt-2">
+                <thead>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Data Transferred</th>
+                        <th>Memory Usage</th>
+                        <th>Performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Without ProjectTo</td>
+                        <td>All 20 columns</td>
+                        <td>High</td>
+                        <td>❌ Slower</td>
+                    </tr>
+                    <tr class="table-success">
+                        <td>With ProjectTo</td>
+                        <td>Only 5 needed columns</td>
+                        <td>Low</td>
+                        <td>✅ Faster</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-success mt-3">
+                <strong>Best Practice:</strong> Always use ProjectTo when working with Entity Framework Core and IQueryable for better performance!
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Examples</a>
+    </div>
+</div>

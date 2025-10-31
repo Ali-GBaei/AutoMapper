@@ -1,0 +1,208 @@
+@{
+    ViewData["Title"] = "AutoMapper Learning Center";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">🗺️ AutoMapper Learning Center</h1>
+        <p class="lead">Complete Guide to AutoMapper in ASP.NET Core MVC</p>
+        <p class="text-muted">From Beginner to Advanced - Learn by Examples</p>
+    </div>
+
+    <!-- What is AutoMapper Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>📚 What is AutoMapper?</h3>
+        </div>
+        <div class="card-body">
+            <p>
+                <strong>AutoMapper</strong> is a popular object-to-object mapper for .NET that eliminates the need for writing tedious mapping code.
+                It uses a convention-based approach to automatically map properties between objects with the same names.
+            </p>
+            <p>
+                <strong>Why use AutoMapper?</strong>
+            </p>
+            <ul>
+                <li>Reduces boilerplate code</li>
+                <li>Improves code maintainability</li>
+                <li>Separates concerns (Domain Models vs DTOs)</li>
+                <li>Simplifies complex object transformations</li>
+                <li>Supports advanced mapping scenarios</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Learning Path -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h3>🎯 Learning Path</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Beginner Level -->
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-success">
+                        <div class="card-header bg-light">
+                            <h5 class="text-success">🟢 Beginner Level</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li><a asp-action="BasicMapping" class="btn btn-outline-success btn-sm mb-2 w-100">1. Basic Mapping</a></li>
+                                <li><a asp-action="ReverseMapping" class="btn btn-outline-success btn-sm mb-2 w-100">2. Reverse Mapping</a></li>
+                                <li><a asp-action="CollectionMapping" class="btn btn-outline-success btn-sm mb-2 w-100">3. Collection Mapping</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Intermediate Level -->
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-warning">
+                        <div class="card-header bg-light">
+                            <h5 class="text-warning">🟡 Intermediate Level</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li><a asp-action="CustomPropertyMapping" class="btn btn-outline-warning btn-sm mb-2 w-100">4. Custom Properties</a></li>
+                                <li><a asp-action="NestedObjectMapping" class="btn btn-outline-warning btn-sm mb-2 w-100">5. Nested Objects</a></li>
+                                <li><a asp-action="Flattening" class="btn btn-outline-warning btn-sm mb-2 w-100">6. Flattening</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Level -->
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-danger">
+                        <div class="card-header bg-light">
+                            <h5 class="text-danger">🔴 Advanced Level</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li><a asp-action="CustomValueResolvers" class="btn btn-outline-danger btn-sm mb-2 w-100">7. Value Resolvers</a></li>
+                                <li><a asp-action="ConditionalMapping" class="btn btn-outline-danger btn-sm mb-2 w-100">8. Conditional Mapping</a></li>
+                                <li><a asp-action="InheritanceMapping" class="btn btn-outline-danger btn-sm mb-2 w-100">9. Inheritance</a></li>
+                                <li><a asp-action="ProjectionExample" class="btn btn-outline-danger btn-sm mb-2 w-100">10. Projection (EF Core)</a></li>
+                                <li><a asp-action="UpdateExistingObject" class="btn btn-outline-danger btn-sm mb-2 w-100">11. Update Existing</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h3>🔗 Additional Resources</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <a asp-action="Features" class="btn btn-info btn-lg w-100 mb-2">
+                        <i class="bi bi-list-check"></i> All Features
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a asp-action="Advantages" class="btn btn-info btn-lg w-100 mb-2">
+                        <i class="bi bi-trophy"></i> Advantages
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a asp-action="BestPractices" class="btn btn-info btn-lg w-100 mb-2">
+                        <i class="bi bi-lightbulb"></i> Best Practices
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Installation Instructions -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h3>⚙️ Installation & Setup</h3>
+        </div>
+        <div class="card-body">
+            <h5>Step 1: Install NuGet Package</h5>
+            <pre class="bg-light p-3 rounded"><code>dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection</code></pre>
+            
+            <h5 class="mt-3">Step 2: Register in Program.cs</h5>
+            <pre class="bg-light p-3 rounded"><code>builder.Services.AddAutoMapper(typeof(Program).Assembly);</code></pre>
+            
+            <h5 class="mt-3">Step 3: Create a Profile</h5>
+            <pre class="bg-light p-3 rounded"><code>public class UserProfile : Profile
+{
+    public UserProfile()
+    {
+        CreateMap&lt;User, UserDTO&gt;();
+    }
+}</code></pre>
+            
+            <h5 class="mt-3">Step 4: Inject and Use IMapper</h5>
+            <pre class="bg-light p-3 rounded"><code>public class MyController : Controller
+{
+    private readonly IMapper _mapper;
+    
+    public MyController(IMapper mapper)
+    {
+        _mapper = mapper;
+    }
+    
+    public IActionResult Index()
+    {
+        var user = GetUser();
+        var userDTO = _mapper.Map&lt;UserDTO&gt;(user);
+        return View(userDTO);
+    }
+}</code></pre>
+        </div>
+    </div>
+
+    <!-- Key Concepts -->
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h3>💡 Key Concepts</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Domain Models</h5>
+                    <p>Represent your business entities and database tables. They contain all properties and business logic.</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>DTOs (Data Transfer Objects)</h5>
+                    <p>Lightweight objects designed to transfer data between layers. They expose only necessary data to clients.</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>ViewModels</h5>
+                    <p>Objects specifically designed for views. They contain only the data needed for display.</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Profiles</h5>
+                    <p>Configuration classes where you define your mappings. They organize mapping logic in a clean way.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    pre {
+        border: 1px solid #dee2e6;
+    }
+    
+    code {
+        font-size: 0.9em;
+    }
+</style>

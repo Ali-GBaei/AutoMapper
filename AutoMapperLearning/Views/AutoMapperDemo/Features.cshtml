@@ -1,0 +1,298 @@
+@{
+    ViewData["Title"] = "AutoMapper Features";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">🎯 Complete AutoMapper Features Reference</h1>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">Features</li>
+        </ol>
+    </nav>
+
+    <!-- Core Methods -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>🔧 Core Methods</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Purpose</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>CreateMap&lt;TSource, TDestination&gt;()</code></td>
+                        <td>Defines a mapping between two types</td>
+                        <td><code>CreateMap&lt;User, UserDTO&gt;();</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Map&lt;TDestination&gt;(source)</code></td>
+                        <td>Maps source object to new destination object</td>
+                        <td><code>var dto = _mapper.Map&lt;UserDTO&gt;(user);</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Map(source, destination)</code></td>
+                        <td>Maps source to existing destination object</td>
+                        <td><code>_mapper.Map(updateDTO, existingUser);</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ReverseMap()</code></td>
+                        <td>Creates bidirectional mapping</td>
+                        <td><code>CreateMap&lt;User, UserDTO&gt;().ReverseMap();</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ForMember()</code></td>
+                        <td>Configures individual property mapping</td>
+                        <td><code>.ForMember(dest => dest.FullName, opt => opt.MapFrom(...))</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ForAllMembers()</code></td>
+                        <td>Applies configuration to all members</td>
+                        <td><code>.ForAllMembers(opt => opt.Condition(...))</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ProjectTo&lt;TDestination&gt;()</code></td>
+                        <td>Projects IQueryable to destination (EF Core)</td>
+                        <td><code>query.ProjectTo&lt;UserDTO&gt;(_mapper.ConfigurationProvider)</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ForMember Options -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h3>⚙️ ForMember Options</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Purpose</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>MapFrom()</code></td>
+                        <td>Maps from a custom source expression</td>
+                        <td><code>opt.MapFrom(src => src.FirstName + " " + src.LastName)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>MapFrom&lt;TResolver&gt;()</code></td>
+                        <td>Uses a custom value resolver</td>
+                        <td><code>opt.MapFrom&lt;AgeResolver&gt;()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Ignore()</code></td>
+                        <td>Ignores the destination property</td>
+                        <td><code>opt.Ignore()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Condition()</code></td>
+                        <td>Maps only if condition is true</td>
+                        <td><code>opt.Condition(src => src.IsActive)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>NullSubstitute()</code></td>
+                        <td>Provides default value when source is null</td>
+                        <td><code>opt.NullSubstitute("N/A")</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>UseDestinationValue()</code></td>
+                        <td>Uses existing destination value instead of mapping</td>
+                        <td><code>opt.UseDestinationValue()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>PreCondition()</code></td>
+                        <td>Evaluates condition before resolving</td>
+                        <td><code>opt.PreCondition(src => src.Address != null)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ConvertUsing()</code></td>
+                        <td>Uses custom conversion logic</td>
+                        <td><code>opt.ConvertUsing(src => src.ToString())</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Profile Configuration -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h3>📝 Profile Configuration Methods</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Purpose</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>IncludeBase&lt;TSource, TDest&gt;()</code></td>
+                        <td>Includes base class mappings</td>
+                        <td><code>CreateMap&lt;Manager, ManagerDTO&gt;().IncludeBase&lt;Employee, EmployeeDTO&gt;()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>IncludeMembers()</code></td>
+                        <td>Flattens properties from nested objects</td>
+                        <td><code>.IncludeMembers(src => src.Address)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>BeforeMap()</code></td>
+                        <td>Executes logic before mapping</td>
+                        <td><code>.BeforeMap((src, dest) => Console.WriteLine("Mapping..."))</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>AfterMap()</code></td>
+                        <td>Executes logic after mapping</td>
+                        <td><code>.AfterMap((src, dest) => dest.Validate())</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ForAllOtherMembers()</code></td>
+                        <td>Configures unmapped members</td>
+                        <td><code>.ForAllOtherMembers(opt => opt.Ignore())</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ValidateMemberList()</code></td>
+                        <td>Validates which members are mapped</td>
+                        <td><code>.ValidateMemberList(MemberList.Destination)</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Attributes -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h3>🏷️ AutoMapper Attributes</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Purpose</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>[IgnoreMap]</code></td>
+                        <td>Ignores property from mapping</td>
+                        <td><code>[IgnoreMap] public string Password { get; set; }</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>[SourceMember]</code></td>
+                        <td>Specifies source member for mapping</td>
+                        <td><code>[SourceMember("FirstName")] public string Name { get; set; }</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="alert alert-info mt-3">
+                <strong>Note:</strong> Attributes are less commonly used than Profile configuration. Profiles are the recommended approach as they keep mapping logic separate from domain models.
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Features -->
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h3>🚀 Advanced Features</h3>
+        </div>
+        <div class="card-body">
+            <h5>1. IValueResolver</h5>
+            <p>Custom resolver for complex property mapping logic:</p>
+            <pre class="bg-light p-3 rounded"><code>public class AgeResolver : IValueResolver&lt;User, UserDTO, int&gt;
+{
+    public int Resolve(User source, UserDTO destination, int destMember, ResolutionContext context)
+    {
+        return DateTime.Today.Year - source.DateOfBirth.Year;
+    }
+}</code></pre>
+
+            <h5 class="mt-4">2. IMemberValueResolver</h5>
+            <p>More efficient when you only need source member, not entire destination:</p>
+            <pre class="bg-light p-3 rounded"><code>public class CustomResolver : IMemberValueResolver&lt;Source, Dest, SourceMember, DestMember&gt;
+{
+    public DestMember Resolve(Source src, Dest dest, SourceMember srcMember, DestMember destMember, ResolutionContext ctx)
+    {
+        // Logic here
+    }
+}</code></pre>
+
+            <h5 class="mt-4">3. ITypeConverter</h5>
+            <p>Converts between two types globally:</p>
+            <pre class="bg-light p-3 rounded"><code>public class DateTimeToStringConverter : ITypeConverter&lt;DateTime, string&gt;
+{
+    public string Convert(DateTime source, string destination, ResolutionContext context)
+    {
+        return source.ToString("yyyy-MM-dd");
+    }
+}</code></pre>
+
+            <h5 class="mt-4">4. Automatic Flattening</h5>
+            <p>AutoMapper automatically flattens nested properties:</p>
+            <pre class="bg-light p-3 rounded"><code>// Source
+public class Product {
+    public Category Category { get; set; }
+}
+public class Category {
+    public string Name { get; set; }
+}
+
+// Destination (automatically mapped)
+public class ProductDTO {
+    public string CategoryName { get; set; } // Maps from Category.Name
+}</code></pre>
+
+            <h5 class="mt-4">5. Projection (LINQ)</h5>
+            <p>Translates mappings to SQL for efficient database queries:</p>
+            <pre class="bg-light p-3 rounded"><code>var userDTOs = await dbContext.Users
+    .Where(u => u.IsActive)
+    .ProjectTo&lt;UserDTO&gt;(_mapper.ConfigurationProvider)
+    .ToListAsync();</code></pre>
+
+            <h5 class="mt-4">6. Collection Mapping</h5>
+            <p>Automatically maps collections:</p>
+            <pre class="bg-light p-3 rounded"><code>var userDTOs = _mapper.Map&lt;List&lt;UserDTO&gt;&gt;(users);
+var userArray = _mapper.Map&lt;UserDTO[]&gt;(users);
+var userEnumerable = _mapper.Map&lt;IEnumerable&lt;UserDTO&gt;&gt;(users);</code></pre>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Home</a>
+        <a asp-action="Advantages" class="btn btn-success">View Advantages →</a>
+    </div>
+</div>
+
+<style>
+    pre {
+        border: 1px solid #dee2e6;
+        overflow-x: auto;
+    }
+    
+    code {
+        font-size: 0.9em;
+    }
+    
+    .table {
+        font-size: 0.95em;
+    }
+</style>

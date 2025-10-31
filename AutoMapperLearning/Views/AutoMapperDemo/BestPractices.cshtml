@@ -1,0 +1,348 @@
+@{
+    ViewData["Title"] = "AutoMapper Best Practices";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">💡 AutoMapper Best Practices</h1>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">Best Practices</li>
+        </ol>
+    </nav>
+
+    <!-- Configuration Best Practices -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h3>⚙️ Configuration Best Practices</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <h5>✅ 1. Use Profiles to Organize Mappings</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>public class UserProfile : Profile
+{
+    public UserProfile()
+    {
+        CreateMap&lt;User, UserDTO&gt;();
+        CreateMap&lt;Address, AddressDTO&gt;();
+    }
+}
+
+public class ProductProfile : Profile
+{
+    public ProductProfile()
+    {
+        CreateMap&lt;Product, ProductDTO&gt;();
+    }
+}</code></pre>
+                <p><strong>Why:</strong> Keeps mappings organized by domain, easier to maintain and test.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 2. Configure AutoMapper Only Once at Startup</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>// In Program.cs
+builder.Services.AddAutoMapper(typeof(Program).Assembly);</code></pre>
+                <p><strong>Bad:</strong></p>
+                <pre class="bg-light p-3"><code>// DON'T create mapper in every controller/method
+var config = new MapperConfiguration(...);
+var mapper = config.CreateMapper();</code></pre>
+                <p><strong>Why:</strong> Configuration is expensive. Do it once, reuse everywhere via DI.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 3. Inject IMapper, Not MapperConfiguration</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>public class MyController : Controller
+{
+    private readonly IMapper _mapper;
+    
+    public MyController(IMapper mapper)
+    {
+        _mapper = mapper;
+    }
+}</code></pre>
+                <p><strong>Why:</strong> IMapper is the correct interface for mapping operations.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 4. Validate Configuration in Tests</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>[Fact]
+public void AutoMapper_Configuration_IsValid()
+{
+    var config = new MapperConfiguration(cfg => 
+    {
+        cfg.AddProfile&lt;UserProfile&gt;();
+        cfg.AddProfile&lt;ProductProfile&gt;();
+    });
+    
+    config.AssertConfigurationIsValid();
+}</code></pre>
+                <p><strong>Why:</strong> Catches mapping errors at compile time, not runtime.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mapping Best Practices -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>🗺️ Mapping Best Practices</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <h5>✅ 5. Use Convention-Based Mapping When Possible</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>// Source and destination have same property names
+public class User { public string Name { get; set; } }
+public class UserDTO { public string Name { get; set; } }
+
+// Simple mapping
+CreateMap&lt;User, UserDTO&gt;();</code></pre>
+                <p><strong>Why:</strong> Less configuration, more maintainable, leverages AutoMapper's strengths.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 6. Use ForMember for Custom Logic</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>CreateMap&lt;User, UserDTO&gt;()
+    .ForMember(dest => dest.FullName, 
+        opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+    .ForMember(dest => dest.Age, 
+        opt => opt.MapFrom&lt;AgeResolver&gt;());</code></pre>
+                <p><strong>Why:</strong> Clear, explicit, and testable custom mapping logic.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 7. Use Custom Resolvers for Complex Logic</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>public class AgeResolver : IValueResolver&lt;User, UserDTO, int&gt;
+{
+    public int Resolve(User source, UserDTO dest, int destMember, ResolutionContext ctx)
+    {
+        // Complex calculation logic here
+        return CalculateAge(source.DateOfBirth);
+    }
+}
+
+// In Profile
+.ForMember(dest => dest.Age, opt => opt.MapFrom&lt;AgeResolver&gt;());</code></pre>
+                <p><strong>Why:</strong> Separates complex logic, makes it reusable and testable.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 8. Map Collections Directly</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>var userDTOs = _mapper.Map&lt;List&lt;UserDTO&gt;&gt;(users);</code></pre>
+                <p><strong>Bad:</strong></p>
+                <pre class="bg-light p-3"><code>// DON'T map one by one
+var userDTOs = new List&lt;UserDTO&gt;();
+foreach (var user in users)
+{
+    userDTOs.Add(_mapper.Map&lt;UserDTO&gt;(user));
+}</code></pre>
+                <p><strong>Why:</strong> More efficient, cleaner code.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 9. Use ProjectTo for Database Queries</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>var userDTOs = await dbContext.Users
+    .Where(u => u.IsActive)
+    .ProjectTo&lt;UserDTO&gt;(_mapper.ConfigurationProvider)
+    .ToListAsync();</code></pre>
+                <p><strong>Bad:</strong></p>
+                <pre class="bg-light p-3"><code>// DON'T load entire entities then map
+var users = await dbContext.Users.Where(u => u.IsActive).ToListAsync();
+var userDTOs = _mapper.Map&lt;List&lt;UserDTO&gt;&gt;(users);</code></pre>
+                <p><strong>Why:</strong> ProjectTo translates to SQL, retrieves only needed columns.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 10. Update Existing Objects When Appropriate</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>// Update existing entity (preserves unchanged properties)
+var existingUser = await dbContext.Users.FindAsync(id);
+_mapper.Map(updateDTO, existingUser);
+await dbContext.SaveChangesAsync();</code></pre>
+                <p><strong>Bad:</strong></p>
+                <pre class="bg-light p-3"><code>// Creates new object, loses tracking
+var user = _mapper.Map&lt;User&gt;(updateDTO);
+dbContext.Users.Update(user); // Issues with tracking</code></pre>
+                <p><strong>Why:</strong> Preserves entity tracking, handles partial updates correctly.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Best Practices -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h3>⚡ Performance Best Practices</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <h5>✅ 11. Avoid Mapping in Loops</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>var userDTOs = _mapper.Map&lt;List&lt;UserDTO&gt;&gt;(users);</code></pre>
+                <p><strong>Bad:</strong></p>
+                <pre class="bg-light p-3"><code>foreach (var user in users)
+{
+    var dto = _mapper.Map&lt;UserDTO&gt;(user); // Multiple calls
+}</code></pre>
+                <p><strong>Why:</strong> Single collection mapping is more efficient.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 12. Use ProjectTo for Large Datasets</h5>
+                <p><strong>Good for EF Core:</strong></p>
+                <pre class="bg-light p-3"><code>var products = await dbContext.Products
+    .ProjectTo&lt;ProductDTO&gt;(_mapper.ConfigurationProvider)
+    .ToListAsync();</code></pre>
+                <p><strong>Why:</strong> Reduces data transfer from database, faster queries.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 13. Avoid Complex Logic in MapFrom</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>// Use resolver for complex logic
+.ForMember(dest => dest.Summary, opt => opt.MapFrom&lt;SummaryResolver&gt;());</code></pre>
+                <p><strong>Bad:</strong></p>
+                <pre class="bg-light p-3"><code>// Complex inline logic (hard to test/maintain)
+.ForMember(dest => dest.Summary, opt => opt.MapFrom(src => 
+{
+    // 50 lines of complex logic here
+}));</code></pre>
+                <p><strong>Why:</strong> Resolvers are more maintainable and testable.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Architecture Best Practices -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h3>🏗️ Architecture Best Practices</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <h5>✅ 14. Keep Domain Models Pure</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>// Domain Model - business logic only
+public class User
+{
+    public int Id { get; set; }
+    public string Email { get; set; }
+    // Business methods
+    public void Activate() { ... }
+}
+
+// DTO - data transfer only
+public class UserDTO
+{
+    public int Id { get; set; }
+    public string Email { get; set; }
+}</code></pre>
+                <p><strong>Why:</strong> Clear separation of concerns, better architecture.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 15. Use Different DTOs for Different Purposes</h5>
+                <p><strong>Good:</strong></p>
+                <pre class="bg-light p-3"><code>public class UserReadDTO { /* All readable fields */ }
+public class UserCreateDTO { /* Only fields needed for creation */ }
+public class UserUpdateDTO { /* Only updatable fields */ }
+public class UserListDTO { /* Minimal info for lists */ }</code></pre>
+                <p><strong>Why:</strong> Better security, clearer intent, optimized data transfer.</p>
+            </div>
+
+            <div class="mb-4">
+                <h5>✅ 16. Group Profiles by Domain/Feature</h5>
+                <p><strong>Good Structure:</strong></p>
+                <pre class="bg-light p-3"><code>Profiles/
+  ├── UserProfile.cs        // User-related mappings
+  ├── ProductProfile.cs     // Product-related mappings
+  ├── OrderProfile.cs       // Order-related mappings
+  └── CommonProfile.cs      // Shared/common mappings</code></pre>
+                <p><strong>Why:</strong> Organized, easier to find and maintain mappings.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Common Pitfalls -->
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h3>⚠️ Common Pitfalls to Avoid</h3>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <h5>❌ 1. Don't Create Mapper Instance Every Time</h5>
+                <pre><code>// WRONG - creates configuration every call
+var config = new MapperConfiguration(...);
+var mapper = config.CreateMapper();
+var dto = mapper.Map&lt;UserDTO&gt;(user);</code></pre>
+            </div>
+
+            <div class="alert alert-danger">
+                <h5>❌ 2. Don't Forget to Call AssertConfigurationIsValid()</h5>
+                <p>Always validate your configuration in tests to catch errors early.</p>
+            </div>
+
+            <div class="alert alert-danger">
+                <h5>❌ 3. Don't Use AutoMapper for Everything</h5>
+                <p>Sometimes manual mapping is clearer, especially for very simple or very complex scenarios.</p>
+            </div>
+
+            <div class="alert alert-danger">
+                <h5>❌ 4. Don't Map in Both Directions Without ReverseMap()</h5>
+                <pre><code>// WRONG
+CreateMap&lt;User, UserDTO&gt;();
+CreateMap&lt;UserDTO, User&gt;(); // Duplicate configuration
+
+// RIGHT
+CreateMap&lt;User, UserDTO&gt;().ReverseMap();</code></pre>
+            </div>
+
+            <div class="alert alert-danger">
+                <h5>❌ 5. Don't Ignore Unmapped Properties Without Reason</h5>
+                <p>If a property isn't mapping, investigate why. Don't just ignore it blindly.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Reference -->
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h3>📋 Quick Reference Checklist</h3>
+        </div>
+        <div class="card-body">
+            <h5>Before Deploying:</h5>
+            <ul>
+                <li>✅ All mappings are in Profiles</li>
+                <li>✅ Configuration validated with AssertConfigurationIsValid()</li>
+                <li>✅ IMapper injected via DI, not created manually</li>
+                <li>✅ ProjectTo used for database queries</li>
+                <li>✅ Complex logic in custom resolvers, not inline</li>
+                <li>✅ Different DTOs for different operations (Create/Read/Update)</li>
+                <li>✅ Collections mapped directly, not in loops</li>
+                <li>✅ Domain models kept pure, no mapping attributes</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Home</a>
+        <a asp-action="Features" class="btn btn-success">View Features →</a>
+    </div>
+</div>
+
+<style>
+    pre {
+        border: 1px solid #dee2e6;
+        font-size: 0.85em;
+    }
+    
+    .alert h5 {
+        margin-bottom: 10px;
+    }
+</style>

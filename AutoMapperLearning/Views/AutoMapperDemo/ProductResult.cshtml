@@ -1,0 +1,93 @@
+@model AutoMapperLearning.Models.DTOs.ProductDTO
+
+@{
+    ViewData["Title"] = ViewBag.Title;
+}
+
+<div class="container mt-5">
+    <h2>@ViewBag.Title</h2>
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">@ViewBag.Title</li>
+        </ol>
+    </nav>
+
+    <div class="alert alert-info">
+        <strong>ℹ️ Description:</strong> @ViewBag.Description
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h4>Product Result</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th width="250">Property</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td><strong>Id</strong></td>
+                    <td>@Model.Id</td>
+                </tr>
+                <tr>
+                    <td><strong>Name</strong></td>
+                    <td>@Model.Name</td>
+                </tr>
+                <tr>
+                    <td><strong>Description</strong></td>
+                    <td>@Model.Description</td>
+                </tr>
+                <tr>
+                    <td><strong>Price</strong> <span class="badge bg-info">Formatted</span></td>
+                    <td>@Model.PriceFormatted</td>
+                </tr>
+                <tr>
+                    <td><strong>Category Name</strong> <span class="badge bg-success">Flattened</span></td>
+                    <td>@Model.CategoryName</td>
+                </tr>
+                <tr>
+                    <td><strong>Category Description</strong> <span class="badge bg-success">Flattened</span></td>
+                    <td>@Model.CategoryDescription</td>
+                </tr>
+                <tr>
+                    <td><strong>In Stock</strong></td>
+                    <td>@(Model.InStock ? "Yes" : "No")</td>
+                </tr>
+                <tr>
+                    <td><strong>Availability Status</strong> <span class="badge bg-warning text-dark">Resolver</span></td>
+                    <td>@Model.AvailabilityStatus</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-secondary text-white">
+            <h5>🔍 Flattening Explained</h5>
+        </div>
+        <div class="card-body">
+            <p>AutoMapper automatically <strong>flattens</strong> nested properties:</p>
+            <pre class="bg-light p-3"><code>// Source object structure
+Product {
+    Category {
+        Name = "Electronics"
+        Description = "Electronic devices"
+    }
+}
+
+// Destination DTO (flattened)
+ProductDTO {
+    CategoryName = "Electronics"        // Automatically mapped from Category.Name
+    CategoryDescription = "Electronic devices" // From Category.Description
+}</code></pre>
+            <p class="mt-3"><strong>How it works:</strong> AutoMapper looks for properties that match the pattern <code>NestedObjectProperty</code> and automatically maps from <code>NestedObject.Property</code>.</p>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" class="btn btn-primary">← Back to Examples</a>
+    </div>
+</div>
