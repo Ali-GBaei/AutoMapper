@@ -2,6 +2,9 @@
 
 A comprehensive, beginner to advanced level guide for learning AutoMapper in ASP.NET Core MVC. This project includes practical examples, detailed explanations, and best practices for using AutoMapper effectively.
 
+<img width="1920" height="1080" alt="Screenshot 2025-11-01 010449" src="https://github.com/user-attachments/assets/b77539e1-4446-4746-9c85-a7e5d4dbc77c" />
+
+
 ## 📚 Table of Contents
 
 - [What is AutoMapper?](#what-is-automapper)
@@ -50,6 +53,9 @@ This learning project covers:
 11. **Projection (EF Core)** - Efficient database queries with ProjectTo
 12. **Update Existing Objects** - Mapping to update existing entities
 
+<img width="1920" height="1080" alt="Screenshot 2025-11-01 010539" src="https://github.com/user-attachments/assets/b8e96b66-9d87-492d-801f-15fd75c450b2" />
+
+
 ## 📦 Installation
 
 ### Prerequisites
@@ -67,6 +73,9 @@ dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
 ```csharp
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 ```
+
+<img width="1920" height="1080" alt="Screenshot 2025-11-01 010554" src="https://github.com/user-attachments/assets/e41677d8-93d1-40bc-a9fd-2a5905278cdb" />
+
 
 ## 📁 Project Structure
 
